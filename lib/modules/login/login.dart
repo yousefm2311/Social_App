@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, unused_local_variable, unnecessary_null_comparison
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_social_app/modules/home/home.dart';
 import 'package:firebase_social_app/modules/login/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/login/cubit/states.dart';
@@ -48,13 +48,17 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                     MyTextField(
+                      maxLines: 1,
                       hintText: 'Email',
                       obscureText: false,
+                      padding: 25.0,
                       controller: emailController,
                     ),
                     const SizedBox(height: 15),
                     MyTextField(
+                      maxLines: 1,
                       hintText: "Password",
+                      padding: 25.0,
                       onSubmit: (value) {
                         cubit.loginMethod(
                             email: emailController.text,
@@ -91,6 +95,8 @@ class LoginScreen extends StatelessWidget {
                       condition: state is! LoginLoadingState,
                       builder: (context) {
                         return MyButton(
+                          heigth: 22.0,
+                          margin: 25.0,
                           textButton: "Sign In",
                           onTap: () {
                             cubit.loginMethod(

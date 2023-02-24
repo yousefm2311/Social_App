@@ -1,11 +1,8 @@
-// ignore_for_file: unnecessary_null_comparison
-
-import 'package:bloc/bloc.dart';
+// ignore_for_file: unnecessary_null_comparison, deprecated_member_use
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
 import 'package:firebase_social_app/modules/home/home.dart';
-
 import 'package:firebase_social_app/modules/login/login.dart';
 import 'package:firebase_social_app/modules/register/register.dart';
 import 'package:firebase_social_app/shared/network/constant/constant.dart';
@@ -36,27 +33,68 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-              create: (BuildContext context) =>
-                  SocialHomeCubit()..getUserData())
-        ],
-        child: BlocConsumer<SocialHomeCubit, SocialHomeState>(
-          builder: (context, state) => MaterialApp(
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
+      providers: [
+        BlocProvider(
+            create: (BuildContext context) => SocialHomeCubit()..getUserData())
+      ],
+      child: BlocConsumer<SocialHomeCubit, SocialHomeState>(
+        builder: (context, state) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.grey[100],
+            appBarTheme: AppBarTheme(
+              titleTextStyle: const TextStyle(color: Colors.black),
+              elevation: 0,
+              backgroundColor: Colors.grey[100],
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+              ),
             ),
-            debugShowCheckedModeBanner: false,
-            initialRoute: 'start',
-            routes: {
-              'start': (context) => startWidget,
-              'login': (context) => LoginScreen(),
-              'register': (context) => RegisterScreen(),
-              'homepage': (context) => const HomePage(),
-            },
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              unselectedItemColor: Colors.grey,
+              selectedItemColor: Colors.black,
+              backgroundColor: Colors.grey[100],
+              elevation: 0,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+            ),
+            primarySwatch: Colors.blue,
+            textTheme: const TextTheme(
+              bodyText2: TextStyle(height: 1.4),
+              headline3: TextStyle(fontSize: 20.0, color: Colors.black,),
+              bodyText1: TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+              ),
+            ),
           ),
-          listener: (context, state) {},
-        ));
+          debugShowCheckedModeBanner: false,
+          darkTheme: ThemeData(
+            scaffoldBackgroundColor: Colors.black,
+            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+              backgroundColor: Colors.black,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              unselectedIconTheme: IconThemeData(color: Colors.white60),
+              selectedIconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+            ),
+            appBarTheme: const AppBarTheme(
+              color: Colors.black12,
+            ),
+          ),
+          themeMode: ThemeMode.light,
+          initialRoute: 'start',
+          routes: {
+            'start': (context) => startWidget,
+            'login': (context) => LoginScreen(),
+            'register': (context) => RegisterScreen(),
+            'homepage': (context) => const HomePage(),
+          },
+        ),
+        listener: (context, state) {},
+      ),
+    );
   }
 }

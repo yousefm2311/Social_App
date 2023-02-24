@@ -41,6 +41,8 @@ class RegisterScreen extends StatelessWidget {
                     height: 35,
                   ),
                   MyTextField(
+                    padding: 25.0,
+                    maxLines: 1,
                     keyboardType: TextInputType.name,
                     controller: nameController,
                     hintText: 'Name',
@@ -50,6 +52,8 @@ class RegisterScreen extends StatelessWidget {
                     height: 10,
                   ),
                   MyTextField(
+                    padding: 25.0,
+                    maxLines: 1,
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     hintText: 'Email',
@@ -59,6 +63,8 @@ class RegisterScreen extends StatelessWidget {
                     height: 10,
                   ),
                   MyTextField(
+                    padding: 25.0,
+                    maxLines: 1,
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
                     hintText: 'Phone',
@@ -68,6 +74,8 @@ class RegisterScreen extends StatelessWidget {
                     height: 10,
                   ),
                   MyTextField(
+                    padding: 25.0,
+                    maxLines: 1,
                     hintText: 'Password',
                     controller: passwordController,
                     obscureText: cubit.isVisibility,
@@ -87,6 +95,8 @@ class RegisterScreen extends StatelessWidget {
                     condition: state is! RegisterLoadingState,
                     builder: (context) {
                       return MyButton(
+                        margin: 25.0,
+                        heigth: 22.0,
                         onTap: () {
                           cubit.registerMethod(
                             email: emailController.text,
@@ -98,7 +108,7 @@ class RegisterScreen extends StatelessWidget {
                         textButton: 'Sigin Up',
                       );
                     },
-                    fallback: (context) => CircularProgressIndicator(),
+                    fallback: (context) =>const CircularProgressIndicator(),
                   ),
                   const SizedBox(
                     height: 20,
