@@ -56,3 +56,47 @@ class AddImagePickerError extends SocialHomeState{}
 class UploadAddImageSuccess extends SocialHomeState {}
 class UploadAddImageError extends SocialHomeState {}
 class UploadAddImageLoading extends SocialHomeState {}
+
+
+//create Post
+
+class CreateNewPostSuccessState extends SocialHomeState {}
+class CreateNewPostErrorState extends SocialHomeState {
+  final String error;
+
+  CreateNewPostErrorState(this.error);
+}
+class CreateNewPostLoadingState extends SocialHomeState {}
+
+class GetPostImagePickerSuccess extends SocialHomeState {}
+
+class GetPostImagePickerError extends SocialHomeState {}
+class RemovePostImagePicker extends SocialHomeState {}
+
+
+//get post data
+
+class GetPostDataSuccessState extends SocialHomeState {}
+class GetPostDataErrorState extends SocialHomeState {
+  final String error;
+
+  GetPostDataErrorState(this.error);
+}
+class GetPostDataLoadingState extends SocialHomeState {}
+
+
+// add like 
+
+class AddLikeSuccessState extends SocialHomeState {}
+class AddLikeErrorState extends SocialHomeState {
+  final String error;
+
+  AddLikeErrorState(this.error);
+}
+
+class AddLikesLenght extends SocialHomeState {}
+
+
+
+class ShowBottomSheet extends SocialHomeState {}
+

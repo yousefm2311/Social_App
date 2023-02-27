@@ -72,7 +72,7 @@ Widget defaultTextButton({
 }) =>
     TextButton(
       onPressed: onTap,
-      child: const Text('UPDATE'),
+      child:  Text(text),
     );
 
 void navigatTo(context, Widget) =>

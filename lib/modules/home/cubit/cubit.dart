@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
 import 'package:firebase_social_app/modules/add_post/add_post.dart';
 import 'package:firebase_social_app/modules/chats/chats.dart';
@@ -41,7 +42,7 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     'Settings',
   ];
 
-  List<Widget> getWidgets = const [
+  List<Widget> getWidgets = [
     Feeds_Screen(),
     Chat_Screen(),
     New_Post(),
@@ -155,37 +156,104 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     });
   }
 
-  // File? addImage;
+  File? postImage;
+  Future<void> getPostImage() async {
+    final pickerFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickerFile != null) {
+      postImage = File(pickerFile.path);
+      emit(GetPostImagePickerSuccess());
+    } else {
+      print("No image selected");
+      emit(GetPostImagePickerError());
+    }
+  }
 
-  // Future<void> getAddPhoto() async {
-  //   final pickerFile = await picker.getImage(source: ImageSource.gallery);
-  //   if (pickerFile != null) {
-  //     addImage = File(pickerFile.path);
-  //     emit(AddImagePickerSuccess());
-  //     uploadAddImage();
-  //   } else {
-  //     print("No image selected");
-  //     emit(AddImagePickerError());
-  //   }
-  // }
+  void removeImagePost() {
+    postImage = null;
+    emit(RemovePostImagePicker());
+  }
 
+  void createNewPostImage({
+    required String dateTime,
+    required String text,
+  }) {
+    emit(CreateNewPostLoadingState());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child("posts/${Uri.file(postImage!.path).pathSegments.last}")
+        .putFile(postImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        createPost(text: text, dateTime: dateTime, postImage: value);
+      }).catchError((error) {
+        print(error.toString());
+        emit(CreateNewPostErrorState(error.toString()));
+      });
+    }).catchError((error) {
+      emit(CreateNewPostErrorState(error.toString()));
+    });
+  }
 
-  // void uploadAddImage() {
-  //   emit(UpdateUserLoading());
-  //   firebase_storage.FirebaseStorage.instance
-  //       .ref()
-  //       .child("photo/${Uri.file(addImage!.path).pathSegments.last}")
-  //       .putFile(addImage!)
-  //       .then((value) {
-  //     value.ref.getDownloadURL().then((value) {
-  //       emit(UploadAddImageSuccess());
-  //     }).catchError((error) {
-  //       print(error.toString());
-  //       emit(UploadAddImageError());
-  //     });
-  //   }).catchError((error) {
-  //     print(error.toString());
-  //     emit(UploadAddImageError());
-  //   });
-  // }
+  void createPost({
+    required String text,
+    required String dateTime,
+    String? postImage,
+  }) {
+    emit(CreateNewPostLoadingState());
+    NewPostModel model = NewPostModel(
+        name: userModel!.name,
+        uId: userModel!.uId,
+        image: userModel!.image,
+        dateTime: dateTime,
+        imagePost: postImage ?? "",
+        text: text);
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(model.toMap())
+        .then((value) {
+      emit(CreateNewPostSuccessState());
+    }).catchError((error) {
+      emit(CreateNewPostErrorState(error.toString()));
+    });
+  }
+
+  List<NewPostModel> postModel = [];
+  List<String> postId = [];
+  List<dynamic> likes = [];
+  void getPosts() {
+    emit(GetPostDataLoadingState());
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      for (var element in value.docs) {
+        element.reference.collection('likes').get().then((value) {
+          likes.add(value.docs.length);
+          postId.add(element.id);
+          postModel.add(NewPostModel.formJson(element.data()));
+          emit(AddLikesLenght());
+        }).catchError((error) {});
+      }
+      emit(GetPostDataSuccessState());
+    }).catchError((error) {
+      emit(GetPostDataErrorState(error.toString()));
+    });
+  }
+
+  void addLike(String postId) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .set({'like': true}).then((value) {
+      emit(AddLikeSuccessState());
+    }).catchError((error) {
+      emit(AddLikeErrorState(error));
+    });
+  }
+var formState = GlobalKey<ScaffoldState>();
+  bool isSheet = false;
+
+  void changeBottomSheet({required bool isShow}) {
+    isSheet = isShow;
+    emit(ShowBottomSheet());
+  }
 }

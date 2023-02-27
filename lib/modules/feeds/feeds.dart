@@ -1,73 +1,100 @@
 // ignore_for_file: camel_case_types, deprecated_member_use
 
-import 'package:firebase_social_app/shared/components/components.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_social_app/models/post_model.dart';
+import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
+import 'package:firebase_social_app/modules/home/cubit/states.dart';
 import 'package:firebase_social_app/shared/components/icon_broken.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Feeds_Screen extends StatelessWidget {
-  const Feeds_Screen({super.key});
+  Feeds_Screen({super.key});
+
+  bool isSheet = true;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          Card(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            elevation: 2.0,
-            margin: const EdgeInsets.all(8.0),
-            child: Stack(
-              alignment: AlignmentDirectional.bottomEnd,
-              children: [
-                const Image(
-                  image: NetworkImage(
-                      'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg'),
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
+    return BlocConsumer<SocialHomeCubit, SocialHomeState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        SocialHomeCubit cubit = SocialHomeCubit.get(context);
+        return ConditionalBuilder(
+          condition: cubit.postModel.isNotEmpty && cubit.userModel != null,
+          builder: (context) {
+            return Form(
+              key: SocialHomeCubit.get(context).formState,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 2.0,
+                      margin: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomEnd,
+                        children: [
+                          const Image(
+                            image: NetworkImage(
+                                'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg'),
+                            width: double.infinity,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Communicate with Friends',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return buildPostItem(
+                            context, cubit.postModel[index], index);
+                      },
+                      itemCount: cubit.postModel.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10.0),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Communicate with Friends',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics:const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return buildPostItem(context);
-            },
-            itemCount: 4,
-            separatorBuilder: (context, index) => const SizedBox(height: 10.0),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-        ],
-      ),
+              ),
+            );
+          },
+          fallback: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+      },
     );
   }
 
-  Widget buildPostItem(context) => Card(
+  Widget buildPostItem(context, NewPostModel model, index) => Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         elevation: 5.0,
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30.0,
-                    backgroundImage: NetworkImage(
-                        'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg'),
+                    backgroundImage: NetworkImage('${model.image}'),
                   ),
                   const SizedBox(
                     width: 20.0,
@@ -77,14 +104,14 @@ class Feeds_Screen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: const [
+                          children: [
                             Text(
-                              'Yousef Mohamed',
+                              '${model.name}',
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5.0,
                             ),
-                            Icon(
+                            const Icon(
                               Icons.check_circle,
                               size: 20.0,
                               color: Colors.blue,
@@ -92,7 +119,7 @@ class Feeds_Screen extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          'January 21, 2023 at 10:30 AM',
+                          '${model.dateTime}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -110,43 +137,47 @@ class Feeds_Screen extends StatelessWidget {
                 ],
               ),
               Divider(
-                color: Colors.grey[800],
+                color: Colors.grey[400],
               ),
               Text(
-                'Aute et consectetur laboris labore id sunt sit eu occaecat nulla ad adipisicing sit quis. Est pariatur aute aliqua aute amet laboris quis tempor tempor esse minim ad. Voluptate ex ex qui exercitation aliquip.',
+                '${model.text}',
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               const SizedBox(
                 height: 10.0,
               ),
-              SizedBox(
-                width: double.infinity,
-                child: Wrap(
-                  children: [
-                    defalutTages(onTap: () {}, text: '#software'),
-                    defalutTages(onTap: () {}, text: '#hardware'),
-                    defalutTages(onTap: () {}, text: '#software'),
-                    defalutTages(onTap: () {}, text: '#computer'),
-                    defalutTages(onTap: () {}, text: '#flutter'),
-                  ],
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: Wrap(
+              //     children: [
+              //       defalutTages(onTap: () {}, text: '#software'),
+              //       defalutTages(onTap: () {}, text: '#hardware'),
+              //       defalutTages(onTap: () {}, text: '#software'),
+              //       defalutTages(onTap: () {}, text: '#computer'),
+              //       defalutTages(onTap: () {}, text: '#flutter'),
+              //     ],
+              //   ),
+              // ),
+              if (model.imagePost != '')
+                const SizedBox(
+                  height: 10.0,
                 ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                height: 170.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg',
+              if (model.imagePost != '')
+                Container(
+                  height: 170.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    image: DecorationImage(
+                      image: model.imagePost != ''
+                          ? NetworkImage(
+                              '${model.imagePost}',
+                            )
+                          : '' as ImageProvider,
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
               const SizedBox(
                 height: 5.0,
               ),
@@ -158,14 +189,14 @@ class Feeds_Screen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
-                          children: const [
-                            Icon(
+                          children: [
+                            const Icon(
                               IconBroken.Heart,
                               color: Colors.red,
                               size: 25.0,
                             ),
-                            SizedBox(width: 5.0),
-                            Text('1200')
+                            const SizedBox(width: 5.0),
+                            Text('${SocialHomeCubit.get(context).likes[index]}')
                           ],
                         ),
                       ),
@@ -178,14 +209,48 @@ class Feeds_Screen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Icon(
+                          children: [
+                            const Icon(
                               IconBroken.Chat,
                               color: Colors.amber,
                               size: 25.0,
                             ),
-                            SizedBox(width: 5.0),
-                            Text('512 comments')
+                            const SizedBox(width: 5.0),
+                            InkWell(
+                                onTap: () {
+                                  if (SocialHomeCubit.get(context).isSheet ==
+                                      true) {
+                                    SocialHomeCubit.get(context)
+                                        .changeBottomSheet(isShow: false);
+                                    Navigator.pop(context);
+                                  } else {
+                                    SocialHomeCubit.get(context)
+                                        .formState
+                                        .currentState
+                                        ?.showBottomSheet((context) {
+                                          return Column(
+                                            children: [
+                                              Container(
+                                                height: 500.0,
+                                                child:
+                                                    Text("Hello Bottom Sheet!"),
+                                              ),
+                                            ],
+                                          );
+                                        })
+                                        .closed
+                                        .then(
+                                          (value) {
+                                            SocialHomeCubit.get(context)
+                                                .changeBottomSheet(
+                                                    isShow: false);
+                                          },
+                                        );
+                                    SocialHomeCubit.get(context)
+                                        .changeBottomSheet(isShow: false);
+                                  }
+                                },
+                                child: const Text('0 comments'))
                           ],
                         ),
                       ),
@@ -194,7 +259,7 @@ class Feeds_Screen extends StatelessWidget {
                 ],
               ),
               Divider(
-                color: Colors.grey[800],
+                color: Colors.grey[400],
               ),
               Row(
                 children: [
@@ -203,10 +268,10 @@ class Feeds_Screen extends StatelessWidget {
                       onTap: () {},
                       child: Row(
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 20.0,
                             backgroundImage: NetworkImage(
-                                'https://cdn.pixabay.com/photo/2017/06/20/22/14/man-2425121_960_720.jpg'),
+                                '${SocialHomeCubit.get(context).userModel!.image}'),
                           ),
                           const SizedBox(width: 10.0),
                           Text('write a comment ...',
@@ -216,7 +281,10 @@ class Feeds_Screen extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      SocialHomeCubit.get(context)
+                          .addLike(SocialHomeCubit.get(context).postId[index]);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: const [
