@@ -2,16 +2,17 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_social_app/models/post_model.dart';
+import 'package:firebase_social_app/modules/comments/comments_page.dart';
+import 'package:firebase_social_app/modules/comments/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
+import 'package:firebase_social_app/shared/components/components.dart';
 import 'package:firebase_social_app/shared/components/icon_broken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Feeds_Screen extends StatelessWidget {
-  Feeds_Screen({super.key});
-
-  bool isSheet = true;
+  const Feeds_Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,52 +23,49 @@ class Feeds_Screen extends StatelessWidget {
         return ConditionalBuilder(
           condition: cubit.postModel.isNotEmpty && cubit.userModel != null,
           builder: (context) {
-            return Form(
-              key: SocialHomeCubit.get(context).formState,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 2.0,
-                      margin: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        children: [
-                          const Image(
-                            image: NetworkImage(
-                                'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg'),
-                            width: double.infinity,
-                            height: 200,
-                            fit: BoxFit.cover,
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    elevation: 2.0,
+                    margin: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        const Image(
+                          image: NetworkImage(
+                              'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg'),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Communicate with Friends',
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Communicate with Friends',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return buildPostItem(
-                            context, cubit.postModel[index], index);
-                      },
-                      itemCount: cubit.postModel.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10.0),
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                  ],
-                ),
+                  ),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return buildPostItem(
+                          context, cubit.postModel[index], index);
+                    },
+                    itemCount: cubit.postModel.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10.0),
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                ],
               ),
             );
           },
@@ -217,40 +215,16 @@ class Feeds_Screen extends StatelessWidget {
                             ),
                             const SizedBox(width: 5.0),
                             InkWell(
-                                onTap: () {
-                                  if (SocialHomeCubit.get(context).isSheet ==
-                                      true) {
-                                    SocialHomeCubit.get(context)
-                                        .changeBottomSheet(isShow: false);
-                                    Navigator.pop(context);
-                                  } else {
-                                    SocialHomeCubit.get(context)
-                                        .formState
-                                        .currentState
-                                        ?.showBottomSheet((context) {
-                                          return Column(
-                                            children: [
-                                              Container(
-                                                height: 500.0,
-                                                child:
-                                                    Text("Hello Bottom Sheet!"),
-                                              ),
-                                            ],
-                                          );
-                                        })
-                                        .closed
-                                        .then(
-                                          (value) {
-                                            SocialHomeCubit.get(context)
-                                                .changeBottomSheet(
-                                                    isShow: false);
-                                          },
-                                        );
-                                    SocialHomeCubit.get(context)
-                                        .changeBottomSheet(isShow: false);
-                                  }
-                                },
-                                child: const Text('0 comments'))
+                              onTap: () {
+                                navigatTo(
+                                    context,
+                                    CommentsPage(
+                                      index: index,
+                                    ));
+                              },
+                              child: Text(
+                                  ' comments'),
+                            )
                           ],
                         ),
                       ),
@@ -265,7 +239,13 @@ class Feeds_Screen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        navigatTo(
+                            context,
+                            CommentsPage(
+                              index: index,
+                            ));
+                      },
                       child: Row(
                         children: [
                           CircleAvatar(

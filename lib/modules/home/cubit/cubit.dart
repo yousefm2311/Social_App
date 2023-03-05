@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_social_app/models/comments_model.dart';
 import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
 import 'package:firebase_social_app/modules/add_post/add_post.dart';
@@ -220,10 +221,14 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
   List<NewPostModel> postModel = [];
   List<String> postId = [];
   List<dynamic> likes = [];
+  List<dynamic> comments = [];
   void getPosts() {
     emit(GetPostDataLoadingState());
     FirebaseFirestore.instance.collection('posts').get().then((value) {
       for (var element in value.docs) {
+        element.reference.collection('comments').get().then((value) {
+          comments.add(value.docs.length);
+        }).catchError((error) {});
         element.reference.collection('likes').get().then((value) {
           likes.add(value.docs.length);
           postId.add(element.id);
@@ -249,11 +254,63 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
       emit(AddLikeErrorState(error));
     });
   }
-var formState = GlobalKey<ScaffoldState>();
-  bool isSheet = false;
 
-  void changeBottomSheet({required bool isShow}) {
-    isSheet = isShow;
-    emit(ShowBottomSheet());
-  }
+  // File? commentImage;
+  // Future<void> getCommentImage() async {
+  //   final pickerFile = await picker.getImage(source: ImageSource.gallery);
+  //   if (pickerFile != null) {
+  //     commentImage = File(pickerFile.path);
+  //     emit(GetPostImagePickerSuccess());
+  //   } else {
+  //     print("No image selected");
+  //     emit(GetPostImagePickerError());
+  //   }
+  // }
+
+  // void addComments({
+  //   required String text,
+  //   required String postId,
+  //   required String dateTime,
+  //   String? commentImage,
+  // }) {
+  //   CommentModel model = CommentModel(
+  //     dateTime: dateTime,
+  //     image: commentImage ?? '',
+  //     imageUser: userModel!.image,
+  //     name: userModel!.name,
+  //     text: text,
+  //     uId: userModel!.uId,
+  //   );
+  //   emit(AddCommentLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .collection('comments')
+  //       .add(model.toJson())
+  //       .then((value) {
+  //     emit(AddCommentSuccessState());
+  //     getComments(postId);
+  //   }).catchError((error) {
+  //     emit(AddCommentErrorState(error.toString()));
+  //   });
+  // }
+
+  // List<CommentModel> comments = [];
+
+  // void getComments(postId) {
+  //   emit(GetCommentsDataLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .collection('comments')
+  //       .get()
+  //       .then((value) {
+  //     value.docs.forEach((element) {
+  //       comments.add(CommentModel.fromJson(element.data()));
+  //     });
+  //     emit(GetCommentsDataSuccessState());
+  //   }).catchError((error) {
+  //     emit(GetCommentsDataErrorState(error.toString()));
+  //   });
+  // }
 }

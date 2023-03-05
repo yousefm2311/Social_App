@@ -96,7 +96,3 @@ class AddLikeErrorState extends SocialHomeState {
 
 class AddLikesLenght extends SocialHomeState {}
 
-
-
-class ShowBottomSheet extends SocialHomeState {}
-
