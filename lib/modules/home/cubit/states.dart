@@ -48,46 +48,50 @@ class UpdateUserError extends SocialHomeState {
 
 class UpdateUserLoading extends SocialHomeState {}
 
+class AddImagePickerSuccess extends SocialHomeState {}
 
-class AddImagePickerSuccess extends SocialHomeState{}
-class AddImagePickerError extends SocialHomeState{}
-
+class AddImagePickerError extends SocialHomeState {}
 
 class UploadAddImageSuccess extends SocialHomeState {}
-class UploadAddImageError extends SocialHomeState {}
-class UploadAddImageLoading extends SocialHomeState {}
 
+class UploadAddImageError extends SocialHomeState {}
+
+class UploadAddImageLoading extends SocialHomeState {}
 
 //create Post
 
 class CreateNewPostSuccessState extends SocialHomeState {}
+
 class CreateNewPostErrorState extends SocialHomeState {
   final String error;
 
   CreateNewPostErrorState(this.error);
 }
+
 class CreateNewPostLoadingState extends SocialHomeState {}
 
 class GetPostImagePickerSuccess extends SocialHomeState {}
 
 class GetPostImagePickerError extends SocialHomeState {}
-class RemovePostImagePicker extends SocialHomeState {}
 
+class RemovePostImagePicker extends SocialHomeState {}
 
 //get post data
 
 class GetPostDataSuccessState extends SocialHomeState {}
+
 class GetPostDataErrorState extends SocialHomeState {
   final String error;
 
   GetPostDataErrorState(this.error);
 }
+
 class GetPostDataLoadingState extends SocialHomeState {}
 
-
-// add like 
+// add like
 
 class AddLikeSuccessState extends SocialHomeState {}
+
 class AddLikeErrorState extends SocialHomeState {
   final String error;
 
@@ -96,3 +100,26 @@ class AddLikeErrorState extends SocialHomeState {
 
 class AddLikesLenght extends SocialHomeState {}
 
+// get all users
+
+class GetAllUsersSuccessState extends SocialHomeState {}
+
+class GetAllUsersErrorState extends SocialHomeState {
+  final String error;
+  GetAllUsersErrorState(this.error);
+}
+
+class GetAllUsersLoadingState extends SocialHomeState {}
+
+// chat with user
+class GetChatSuccessState extends SocialHomeState {}
+
+
+// add chat with user
+
+class AddChatSuccessState extends SocialHomeState{}
+class AddChatErrorState extends SocialHomeState{
+  final String error;
+
+  AddChatErrorState(this.error);
+}

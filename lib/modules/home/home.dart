@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
       listener: (context, state) {
         if (state is AddPostState) {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) =>  New_Post()));
+              .push(MaterialPageRoute(builder: (context) => New_Post()));
         }
       },
     );

@@ -148,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                                 await cubit.signInWithGoogle().then((value) {
                               Navigator.pushAndRemoveUntil(context,
                                   MaterialPageRoute(builder: (context) {
-                                return HomePage();
+                                return const HomePage();
                               }), (Route<dynamic> rout) => false);
                             });
                           },
@@ -204,8 +204,10 @@ class LoginScreen extends StatelessWidget {
           } else if (state is LoginSuccessState) {
             Cache_Helper.saveData(key: 'uId', value: state.uId).then((value) {
               showFLutterToast(state.toString(),
-                color: ToastColor.SUCCESS, text: 'Success');
-                Navigator.of(context).pushNamedAndRemoveUntil('homepage', (route) => false);
+                  color: ToastColor.SUCCESS, text: 'Success');
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('homepage', (route) => false);
+              LoginCubit.get(context).requestGalleryPermission(context);
             });
           }
         },

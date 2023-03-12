@@ -232,16 +232,17 @@ class CommentsPage extends StatelessWidget {
                             ),
                           if (model.image != '')
                             ConditionalBuilder(
-                                condition: model.image!.isNotEmpty,
-                                builder: (context) {
-                                  return Image(
-                                    height: 200.0,
-                                    image: NetworkImage('${model.image}'),
-                                  );
-                                },
-                                fallback: (context) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ))
+                              condition: model.image!.isNotEmpty,
+                              builder: (context) {
+                                return Image(
+                                  height: 200.0,
+                                  image: NetworkImage('${model.image}'),
+                                );
+                              },
+                              fallback: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
                         ],
                       ),
                     ),

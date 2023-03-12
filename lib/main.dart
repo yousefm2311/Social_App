@@ -35,7 +35,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (BuildContext context) => SocialHomeCubit()..getUserData()..getPosts())
+            create: (BuildContext context) => SocialHomeCubit()
+              ..getPosts()
+              ..getUserData()
+              )
       ],
       child: BlocConsumer<SocialHomeCubit, SocialHomeState>(
         builder: (context, state) => MaterialApp(
@@ -61,7 +64,10 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: const TextTheme(
               bodyText2: TextStyle(height: 1.4),
-              headline3: TextStyle(fontSize: 20.0, color: Colors.black,),
+              headline3: TextStyle(
+                fontSize: 20.0,
+                color: Colors.black,
+              ),
               bodyText1: TextStyle(
                 color: Colors.white,
                 fontSize: 15.0,

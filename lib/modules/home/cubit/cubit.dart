@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_social_app/models/comments_model.dart';
+import 'package:firebase_social_app/models/chat_model.dart';
 import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
 import 'package:firebase_social_app/modules/add_post/add_post.dart';
@@ -39,19 +39,22 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     'News Feed',
     'Chats',
     'Post',
-    'Profile',
+    'Users',
     'Settings',
   ];
 
   List<Widget> getWidgets = [
-    Feeds_Screen(),
-    Chat_Screen(),
+    const Feeds_Screen(),
+    const Chat_Screen(),
     New_Post(),
-    Profile_Screen(),
-    Settings_Screen(),
+    const Profile_Screen(),
+    const Settings_Screen(),
   ];
   int currentIndex = 0;
   void changeCurrentIndex(value) {
+    if (value == 1) {
+      getAllUsers();
+    }
     if (value == 2) {
       emit(AddPostState());
     } else {
@@ -74,6 +77,7 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
   }
 
   File? coverImage;
+
   Future<void> getImageCover() async {
     final pickerFile = await picker.getImage(source: ImageSource.gallery);
     if (pickerFile != null) {
@@ -252,6 +256,93 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
       emit(AddLikeSuccessState());
     }).catchError((error) {
       emit(AddLikeErrorState(error));
+    });
+  }
+
+  List<SocialUserModel> allUser = [];
+
+  void getAllUsers() {
+    emit(GetAllUsersLoadingState());
+    if (allUser.isEmpty) {
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        for (var element in value.docs) {
+          if (element.data()['uId'] != userModel!.uId) {
+            allUser.add(SocialUserModel.formJson(element.data()));
+          }
+        }
+        emit(GetAllUsersSuccessState());
+      }).catchError((error) {
+        emit(GetAllUsersErrorState(error.toString()));
+      });
+    }
+  }
+
+  void sendMessage({
+    required String text,
+    required String receiverId,
+    required String dateTime,
+  }) {
+    ChatModel model = ChatModel(
+        text: text,
+        receiverId: receiverId,
+        senderId: userModel!.uId,
+        dateTime: dateTime);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(AddChatSuccessState());
+    }).catchError((error) {
+      emit(AddChatErrorState(error.toString()));
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(userModel!.uId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(AddChatSuccessState());
+    }).catchError((error) {
+      emit(AddChatErrorState(error.toString()));
+    });
+  }
+
+  List<ChatModel> messages = [];
+
+  final scrollController = ScrollController();
+  void scrollToBottom() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 60), curve: Curves.easeOut);
+    }
+  }
+
+  void getMessages({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      scrollToBottom();
+      for (var element in event.docs) {
+        messages.add(ChatModel.formJson(element.data()));
+      }
+      emit(GetChatSuccessState());
+      scrollToBottom();
     });
   }
 

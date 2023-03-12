@@ -59,7 +59,7 @@ class New_Post extends StatelessWidget {
                         width: 20.0,
                       ),
                       Expanded(
-                        child: Text(
+                        child: Text(''
                           '${cubit.userModel!.name}',
                         ),
                       ),

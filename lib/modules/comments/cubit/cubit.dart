@@ -58,9 +58,9 @@ class SocialCubit extends Cubit<SocialAppCommentState> {
     });
   }
 
-
   List<CommentModel> comments = [];
   void getComments(postId) {
+    comments = [];
     emit(GetCommentsDataLoadingState());
     FirebaseFirestore.instance
         .collection('posts')

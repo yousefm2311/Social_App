@@ -3,7 +3,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/modules/comments/comments_page.dart';
-import 'package:firebase_social_app/modules/comments/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
 import 'package:firebase_social_app/shared/components/components.dart';
@@ -21,7 +20,7 @@ class Feeds_Screen extends StatelessWidget {
       builder: (context, state) {
         SocialHomeCubit cubit = SocialHomeCubit.get(context);
         return ConditionalBuilder(
-          condition: cubit.postModel.isNotEmpty && cubit.userModel != null,
+          condition: cubit.postModel.isNotEmpty && cubit.userModel != null ,
           builder: (context) {
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
