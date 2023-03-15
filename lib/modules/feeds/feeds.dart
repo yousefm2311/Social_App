@@ -221,7 +221,7 @@ class Feeds_Screen extends StatelessWidget {
                                       index: index,
                                     ));
                               },
-                              child: Text(
+                              child: const Text(
                                   ' comments'),
                             )
                           ],

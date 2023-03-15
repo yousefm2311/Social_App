@@ -12,12 +12,13 @@ class Profile_Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SocialHomeCubit, SocialHomeState>(
       builder: (context, state) {
+        // ignore: unused_local_variable
         SocialHomeCubit cubit = SocialHomeCubit.get(context);
         return Scaffold(
           body: Column(
             children: [
               Row(
-                children: [
+                children: const [
                   CircleAvatar(
                     radius: 30.0,
                   ),

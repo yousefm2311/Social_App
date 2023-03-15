@@ -1,15 +1,24 @@
 // ignore_for_file: unnecessary_null_comparison, deprecated_member_use
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
 import 'package:firebase_social_app/modules/home/home.dart';
 import 'package:firebase_social_app/modules/login/login.dart';
 import 'package:firebase_social_app/modules/register/register.dart';
+import 'package:firebase_social_app/shared/endPoints/list.dart';
 import 'package:firebase_social_app/shared/network/constant/constant.dart';
 import 'package:firebase_social_app/shared/network/local/cahce_helper.dart';
 import 'package:firebase_social_app/shared/observer/observer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (kDebugMode) {
+    print(message.toString());
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +27,16 @@ void main() async {
   Widget? widget;
   uId = Cache_Helper.getData(key: 'uId');
   await Firebase.initializeApp();
+
+  // ignore: unused_local_variable
+  token = await FirebaseMessaging.instance.getToken();
+
+  FirebaseMessaging.onMessage.listen((event) {});
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {});
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  if (kDebugMode) {
+    print('Token : $token');
+  }
   if (uId != null) {
     widget = const HomePage();
   } else {
@@ -37,8 +56,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (BuildContext context) => SocialHomeCubit()
               ..getPosts()
-              ..getUserData()
-              )
+              ..getUserData())
       ],
       child: BlocConsumer<SocialHomeCubit, SocialHomeState>(
         builder: (context, state) => MaterialApp(

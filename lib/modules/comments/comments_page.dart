@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable, avoid_print
 
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_social_app/models/comments_model.dart';
 import 'package:firebase_social_app/modules/comments/cubit/cubit.dart';

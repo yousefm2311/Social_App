@@ -123,3 +123,13 @@ class AddChatErrorState extends SocialHomeState{
 
   AddChatErrorState(this.error);
 }
+
+
+//send notification  using firebase
+class SendNotificationSuccessState extends SocialHomeState {}
+class SendNotificationErrorState extends SocialHomeState {
+  final String error;
+
+  SendNotificationErrorState(this.error);
+}
+class SendNotificationLoadingState extends SocialHomeState {}

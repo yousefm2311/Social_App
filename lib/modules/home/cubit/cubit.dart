@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_social_app/models/chat_model.dart';
 import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_social_app/modules/feeds/feeds.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
 import 'package:firebase_social_app/modules/settings/settings.dart';
 import 'package:firebase_social_app/modules/users/users.dart';
+import 'package:firebase_social_app/shared/endPoints/list.dart';
 import 'package:firebase_social_app/shared/network/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -314,16 +316,17 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     });
   }
 
-  List<ChatModel> messages = [];
+
 
   final scrollController = ScrollController();
   void scrollToBottom() {
     if (scrollController.hasClients) {
-      scrollController.animateTo(scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 60), curve: Curves.easeOut);
+      scrollController.jumpTo(
+        scrollController.position.maxScrollExtent,
+      );
     }
   }
-
+  List<ChatModel> messages = [];
   void getMessages({
     required String receiverId,
   }) {
@@ -344,6 +347,38 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
       emit(GetChatSuccessState());
       scrollToBottom();
     });
+  }
+
+  Future sendNotification() async {
+    final data = {
+      "notification": {"body": "Test Success", "title": 'Yousef'},
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done"
+      },
+      "to": token
+    };
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization':
+          'key=AAAAUA5nIoE:APA91bFS5930Gt94z8IA6DzylewCpolug7aDmLStpV8PjxlNHIeY323i9iRQu8uM19IGr2YrOfxJPLeFrMJfGN4J92uOgLN3r3MJt6u7bl728lUizHPJmyZHCBPPRORHSTqMdD-Qh64T',
+    };
+
+    try {
+      // ignore: unused_local_variable
+      final response = await Dio()
+          .post('https://fcm.googleapis.com/fcm/send',
+              data: data, options: Options(headers: headers))
+          .then((value) {
+        emit(SendNotificationSuccessState());
+        print(value.data.toString());
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   // File? commentImage;

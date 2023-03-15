@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_social_app/models/user_model.dart';
 import 'package:firebase_social_app/modules/register/cubit/states.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
@@ -29,7 +30,9 @@ class RegisterCubit extends Cubit<RegisterStates> {
       print(value.user!.uid);
       userCreate(email: email, uId: value.user!.uid, name: name, phone: phone);
     }).catchError((error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
       emit(RegisterErrorState(error.toString()));
     });
   }
@@ -57,7 +60,9 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .then((value) {
       emit(CreateUserSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
       emit(CreateUserErrorState(error.toString()));
     });
   }

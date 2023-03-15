@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 showFLutterToast(String error, {required color, required String text}) {
   Fluttertoast.showToast(
-      msg: "${text}",
+      msg: text,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
@@ -15,6 +15,7 @@ showFLutterToast(String error, {required color, required String text}) {
       fontSize: 16.0);
 }
 
+// ignore: constant_identifier_names
 enum ToastColor { SUCCESS, ERROR, WANING }
 
 Color chooseColor(ToastColor state) {

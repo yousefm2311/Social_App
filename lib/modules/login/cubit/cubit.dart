@@ -25,6 +25,7 @@ class LoginCubit extends Cubit<LoginStates> {
         .then((value) {
       print(value.user!.uid);
 
+
       emit(LoginSuccessState(value.user!.uid));
     }).catchError((error) {
       print(error.toString());
@@ -35,7 +36,6 @@ class LoginCubit extends Cubit<LoginStates> {
   void requestGalleryPermission(context) async {
     PermissionStatus permissionStatus = await Permission.photos.request();
     if (permissionStatus.isGranted) {
-      
     } else {
       showDialog(
         context: context,
@@ -63,8 +63,7 @@ class LoginCubit extends Cubit<LoginStates> {
       );
     }
   }
- 
- 
+
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 

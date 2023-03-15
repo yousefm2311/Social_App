@@ -2,11 +2,11 @@
 
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_social_app/modules/comments/cubit/states.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
-import 'package:firebase_social_app/shared/endPoints/list.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;

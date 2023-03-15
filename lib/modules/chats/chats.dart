@@ -1,7 +1,6 @@
 // ignore_for_file: camel_case_types
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_social_app/models/chat_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
 import 'package:firebase_social_app/modules/chat_details/chat_details.dart';
 import 'package:firebase_social_app/shared/components/components.dart';

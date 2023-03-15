@@ -22,7 +22,6 @@ class ChatDetails extends StatelessWidget {
       return BlocConsumer<SocialHomeCubit, SocialHomeState>(
         builder: (context, index) {
           SocialHomeCubit cubit = SocialHomeCubit.get(context);
-
           return Scaffold(
               appBar: AppBar(
                 actions: [
@@ -74,6 +73,7 @@ class ChatDetails extends StatelessWidget {
                                     text: textController.text,
                                     receiverId: '${model!.uId}',
                                     dateTime: DateTime.now().toString());
+                                cubit.scrollToBottom();
                                 textController.text = '';
                               },
                               decoration: InputDecoration(
@@ -119,12 +119,14 @@ class ChatDetails extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 cubit.sendMessage(
                                     text: textController.text,
                                     receiverId: '${model!.uId}',
                                     dateTime: DateTime.now().toString());
+                                cubit.scrollToBottom();
                                 textController.text = '';
+                                cubit.sendNotification();
                               },
                               minWidth: 1,
                               child: const Icon(IconBroken.Send),

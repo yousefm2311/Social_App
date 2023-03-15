@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, use_build_context_synchronously
+// ignore_for_file: unused_local_variable, use_build_context_synchronously, must_be_immutable
 
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';

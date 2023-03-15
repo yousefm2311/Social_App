@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_string_interpolations
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_social_app/modules/add_post/add_post.dart';
 import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 import 'package:firebase_social_app/modules/home/cubit/states.dart';
@@ -19,8 +20,15 @@ class HomePage extends StatelessWidget {
             title: Text("${cubit.titleAppbar[cubit.currentIndex]}"),
             actions: [
               IconButton(
-                  onPressed: () {}, icon: const Icon(IconBroken.Notification)),
-              IconButton(onPressed: () {}, icon: const Icon(IconBroken.Search)),
+                  onPressed: () {
+                    FirebaseMessaging.instance.subscribeToTopic('message');
+                  },
+                  icon: const Icon(IconBroken.Notification)),
+              IconButton(
+                  onPressed: () {
+                    FirebaseMessaging.instance.unsubscribeFromTopic('message');
+                  },
+                  icon: const Icon(IconBroken.Search)),
             ],
           ),
           body: cubit.getWidgets[cubit.currentIndex],
