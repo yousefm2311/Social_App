@@ -31,6 +31,10 @@ void main() async {
   // ignore: unused_local_variable
   token = await FirebaseMessaging.instance.getToken();
 
+  if (kDebugMode) {
+    print("Token $token");
+  }
+
   FirebaseMessaging.onMessage.listen((event) {});
   FirebaseMessaging.onMessageOpenedApp.listen((event) {});
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);

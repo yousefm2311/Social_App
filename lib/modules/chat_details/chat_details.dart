@@ -19,6 +19,7 @@ class ChatDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext context) {
       SocialHomeCubit.get(context).getMessages(receiverId: model!.uId!);
+
       return BlocConsumer<SocialHomeCubit, SocialHomeState>(
         builder: (context, index) {
           SocialHomeCubit cubit = SocialHomeCubit.get(context);
@@ -26,7 +27,13 @@ class ChatDetails extends StatelessWidget {
               appBar: AppBar(
                 actions: [
                   IconButton(
-                      onPressed: () {}, icon: const Icon(IconBroken.Call))
+                      onPressed: () {
+                        SocialHomeCubit.get(context).sendMessage(
+                            text: 'good',
+                            dateTime: DateTime.now().toString(),
+                            receiverId: "${model!.uId}");
+                      },
+                      icon: const Icon(IconBroken.Call))
                 ],
                 titleSpacing: 0.0,
                 title: Row(children: [
@@ -74,6 +81,7 @@ class ChatDetails extends StatelessWidget {
                                     receiverId: '${model!.uId}',
                                     dateTime: DateTime.now().toString());
                                 cubit.scrollToBottom();
+                                cubit.sendNotification(model!.token);
                                 textController.text = '';
                               },
                               decoration: InputDecoration(
@@ -124,9 +132,10 @@ class ChatDetails extends StatelessWidget {
                                     text: textController.text,
                                     receiverId: '${model!.uId}',
                                     dateTime: DateTime.now().toString());
+
                                 cubit.scrollToBottom();
+                                cubit.sendNotification(model!.token);
                                 textController.text = '';
-                                cubit.sendNotification();
                               },
                               minWidth: 1,
                               child: const Icon(IconBroken.Send),

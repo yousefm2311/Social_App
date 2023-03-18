@@ -133,3 +133,13 @@ class SendNotificationErrorState extends SocialHomeState {
   SendNotificationErrorState(this.error);
 }
 class SendNotificationLoadingState extends SocialHomeState {}
+
+
+// create tpken state
+class CreateTokenSuccessState extends SocialHomeState {}
+class CreateTokenErrorState extends SocialHomeState {
+  final String error;
+
+  CreateTokenErrorState(this.error);
+}
+class CreateTokenLoadingState extends SocialHomeState {}

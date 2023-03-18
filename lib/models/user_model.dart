@@ -6,18 +6,20 @@ class SocialUserModel {
   String? bio;
   String? image;
   String? cover;
+  String? token;
   bool? isVerified;
 
-  SocialUserModel(
-      {this.email,
-      this.name,
-      this.phone,
-      this.uId,
-      this.isVerified,
-      this.image,
-      this.bio,
-      this.cover,
-      });
+  SocialUserModel({
+    this.email,
+    this.name,
+    this.phone,
+    this.uId,
+    this.isVerified,
+    this.image,
+    this.bio,
+    this.cover,
+    this.token
+  });
 
   SocialUserModel.formJson(Map<String, dynamic> json) {
     name = json["name"];
@@ -27,6 +29,7 @@ class SocialUserModel {
     image = json["image"];
     bio = json["bio"];
     cover = json["cover"];
+    token = json["token"];
 
     isVerified = json["isVerified"];
   }
@@ -40,6 +43,7 @@ class SocialUserModel {
       'image': image,
       'bio': bio,
       'cover': cover,
+      'token': token,
       'isVerified': isVerified
     };
   }

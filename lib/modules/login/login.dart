@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, unused_local_variable, unnecessary_null_comparison
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_social_app/modules/home/cubit/cubit.dart';
 
 import 'package:firebase_social_app/modules/home/home.dart';
 import 'package:firebase_social_app/modules/login/cubit/cubit.dart';

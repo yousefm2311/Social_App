@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_social_app/models/chat_model.dart';
 import 'package:firebase_social_app/models/post_model.dart';
 import 'package:firebase_social_app/models/user_model.dart';
@@ -316,8 +317,6 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     });
   }
 
-
-
   final scrollController = ScrollController();
   void scrollToBottom() {
     if (scrollController.hasClients) {
@@ -326,6 +325,31 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
       );
     }
   }
+
+  // void createToken() async {
+  //   emit(CreateTokenLoadingState());
+  //   FirebaseFirestore.instance
+  //       ..collection('users')
+  //       .doc(userModel!.uId)
+  //       .collection('token')
+  //       .doc(userModel!.uId)
+  //       .add({'':''}).then((value) {
+  //     print('Token created! ${value.toString()}');
+  //     emit(CreateTokenSuccessState());
+  //   }).catchError((error) {
+  //     emit(CreateTokenErrorState(error.toString()));
+  //   });
+  // }
+
+  // List tokenList = [];
+  // void getToken(reciverId) {
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(userModel!.uId)
+  //       .collection('token')
+  //       .get();
+  // }
+
   List<ChatModel> messages = [];
   void getMessages({
     required String receiverId,
@@ -349,7 +373,7 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
     });
   }
 
-  Future sendNotification() async {
+  Future sendNotification(tokenResivere) async {
     final data = {
       "notification": {"body": "Test Success", "title": 'Yousef'},
       "priority": "high",
@@ -358,7 +382,7 @@ class SocialHomeCubit extends Cubit<SocialHomeState> {
         "id": "1",
         "status": "done"
       },
-      "to": token
+      "to": tokenResivere
     };
 
     final headers = {
